@@ -56,7 +56,7 @@ export const MEMPELAI = [
     urutan:    "Putri Kedua",
     foto:      "/photos/mempelai1.jpeg",
     instagram: "@nuraeni",
-    igUrl:     "https://instagram.com/nuraeni",
+    igUrl:     "https://www.instagram.com/nuraeni_1007?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==",
   },
   {
     nama:      "Sulfana",
@@ -67,7 +67,7 @@ export const MEMPELAI = [
     urutan:    "Putra Pertama",
     foto:      "/photos/mempelai2.jpeg",
     instagram: "@sulfana",
-    igUrl:     "https://instagram.com/sulfana",
+    igUrl:     "https://www.instagram.com/sulfana_____?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==",
   },
 ];
 
@@ -95,9 +95,9 @@ export const PENGUNDANG = {
 
 export const BANKS = [
   {
-    bank:  "BRI",
-    norek: "xxxx xxxx xxxx",
-    atas:  "Nuraeni",
+    bank:  "Bank Sulselbar",
+    norek: "1372010000032267",
+    atas:  "NURAENI",
   },
 ];
 
