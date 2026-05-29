@@ -105,28 +105,31 @@ const NAV_ITEMS = [
 ════════════════════════════════════════════════ */
 
 function useAutoScroll(isOpen) {
-  const rafRef    = useRef(null);
-  const activeRef = useRef(false);
+  const rafRef      = useRef(null);
+  const activeRef   = useRef(false);
+  const listenersRef = useRef([]);
 
   useEffect(() => {
     if (!isOpen) return;
 
     const stop = () => {
+      if (!activeRef.current) return;
       activeRef.current = false;
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
 
-    const onUserInteract = () => stop();
-    window.addEventListener('touchstart', onUserInteract, { passive: true });
-    window.addEventListener('wheel',      onUserInteract, { passive: true });
-    window.addEventListener('touchmove',  onUserInteract, { passive: true });
-    window.addEventListener('keydown',    onUserInteract);
+    const removeListeners = () => {
+      listenersRef.current.forEach(({ type, fn, opts }) =>
+        window.removeEventListener(type, fn, opts)
+      );
+      listenersRef.current = [];
+    };
 
     /* Mulai scroll setelah animasi pembuka selesai */
     const startTimer = setTimeout(() => {
       activeRef.current = true;
 
-      const SPEED = 2; // px per frame — makin besar makin cepat
+      const SPEED = 1.5; // px per frame — sedikit lebih pelan agar smooth di mobile
 
       const tick = () => {
         if (!activeRef.current) return;
@@ -141,15 +144,36 @@ function useAutoScroll(isOpen) {
       };
 
       rafRef.current = requestAnimationFrame(tick);
-    }, 1000);
+
+      /*
+       * Pasang listener SETELAH scroll aktif, bukan sebelumnya.
+       * Ini mencegah tap "Buka Undangan" ikut tertangkap dan langsung stop.
+       *
+       * touchmove  → user pasti sengaja scroll, langsung stop
+       * wheel      → scroll mouse/trackpad, langsung stop
+       * keydown    → keyboard arrow, langsung stop
+       * touchstart → TIDAK dipasang di sini karena terlalu sensitif di mobile
+       *              (setiap tap pun akan mentrigger ini)
+       */
+      const onMove  = () => { stop(); removeListeners(); };
+      const onWheel = () => { stop(); removeListeners(); };
+      const onKey   = () => { stop(); removeListeners(); };
+
+      window.addEventListener('touchmove', onMove,  { passive: true });
+      window.addEventListener('wheel',     onWheel, { passive: true });
+      window.addEventListener('keydown',   onKey);
+
+      listenersRef.current = [
+        { type: 'touchmove', fn: onMove,  opts: { passive: true } },
+        { type: 'wheel',     fn: onWheel, opts: { passive: true } },
+        { type: 'keydown',   fn: onKey,   opts: undefined },
+      ];
+    }, 1200); // sedikit lebih lama agar animasi cover selesai dulu
 
     return () => {
       clearTimeout(startTimer);
       stop();
-      window.removeEventListener('touchstart', onUserInteract);
-      window.removeEventListener('wheel',      onUserInteract);
-      window.removeEventListener('touchmove',  onUserInteract);
-      window.removeEventListener('keydown',    onUserInteract);
+      removeListeners();
     };
   }, [isOpen]);
 }
