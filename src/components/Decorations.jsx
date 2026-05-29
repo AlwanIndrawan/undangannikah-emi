@@ -195,3 +195,167 @@ export function LontaraPattern({ style }) {
 /* ── Stub (agar tidak error) ── */
 export function LeafDeco()      { return null; }
 export function BotanicalCurve(){ return null; }
+
+/* ══════════════════════════════════════════════════════════
+   PINISI — Perahu Layar Bugis Makassar
+   SVG kecil-kecil tersebar di background section
+   ══════════════════════════════════════════════════════════ */
+
+/* Satu SVG perahu pinisi autentik — stroke emas tebal & kentara */
+function PinisiIcon({ size = 48, opacity = 0.35, style = {}, flip = false, rotate = 0 }) {
+  const g = '#C9922A'; // warna emas utama
+  const gb = '#E8B84B'; // emas terang untuk aksen
+  return (
+    <svg
+      viewBox="0 0 100 90"
+      width={size}
+      height={size * 0.9}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+      style={{
+        position: 'absolute',
+        pointerEvents: 'none',
+        opacity,
+        transform: `${flip ? 'scaleX(-1) ' : ''}rotate(${rotate}deg)`,
+        filter: `drop-shadow(0 0 3px rgba(201,146,42,0.4))`,
+        ...style,
+      }}
+    >
+      {/* Lambung kapal utama */}
+      <path
+        d="M8 68 Q20 74 50 76 Q80 74 92 68 L85 78 Q65 86 50 87 Q35 86 15 78 Z"
+        stroke={g} strokeWidth="2" fill={`rgba(201,146,42,0.08)`}
+        strokeLinecap="round" strokeLinejoin="round"
+      />
+      {/* Cadik kiri (outrigger) */}
+      <path
+        d="M10 72 Q4 76 2 80 Q12 78 22 76"
+        stroke={g} strokeWidth="1.6" fill="none"
+        strokeLinecap="round"
+      />
+      {/* Batang cadik */}
+      <path d="M14 70 L6 78" stroke={g} strokeWidth="1.4" strokeLinecap="round"/>
+      <path d="M22 68 L14 78" stroke={g} strokeWidth="1.4" strokeLinecap="round"/>
+
+      {/* Tiang utama (tengah) — paling tebal */}
+      <path
+        d="M50 68 L50 8"
+        stroke={gb} strokeWidth="2.2" strokeLinecap="round"
+      />
+      {/* Tiang depan (miring ke depan) */}
+      <path
+        d="M50 60 L32 16"
+        stroke={g} strokeWidth="1.8" strokeLinecap="round"
+      />
+      {/* Tiang belakang (miring ke belakang) */}
+      <path
+        d="M50 58 L66 20"
+        stroke={g} strokeWidth="1.6" strokeLinecap="round"
+      />
+
+      {/* Layar utama besar */}
+      <path
+        d="M50 10 L50 64 L18 54 Z"
+        stroke={gb} strokeWidth="1.6" fill={`rgba(232,184,75,0.12)`}
+        strokeLinecap="round" strokeLinejoin="round"
+      />
+      {/* Layar depan */}
+      <path
+        d="M34 18 L50 62 L20 56 Z"
+        stroke={g} strokeWidth="1.4" fill={`rgba(201,146,42,0.08)`}
+        strokeLinecap="round" strokeLinejoin="round"
+      />
+      {/* Layar belakang kecil */}
+      <path
+        d="M50 22 L64 20 L50 58 Z"
+        stroke={g} strokeWidth="1.3" fill={`rgba(201,146,42,0.07)`}
+        strokeLinecap="round" strokeLinejoin="round"
+      />
+
+      {/* Bendera di puncak tiang */}
+      <path
+        d="M50 8 L60 13 L50 18"
+        stroke={gb} strokeWidth="1.3" fill={`rgba(232,184,75,0.2)`}
+        strokeLinecap="round" strokeLinejoin="round"
+      />
+
+      {/* Gelombang air */}
+      <path
+        d="M4 82 Q14 78 24 82 Q34 86 44 82 Q54 78 64 82 Q74 86 84 82 Q94 78 98 82"
+        stroke={g} strokeWidth="1.4" fill="none"
+        strokeLinecap="round"
+      />
+      <path
+        d="M8 87 Q18 83 30 87 Q42 91 54 87 Q66 83 78 87 Q88 91 96 87"
+        stroke={g} strokeWidth="1" fill="none" strokeOpacity="0.6"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+/* Layout pinisi tersebar di background — dipakai di tiap section */
+export function PinisiBackground() {
+  /* Data posisi: [top%, left%, size, opacity, flip, rotate] */
+  const ships = [
+    /* Baris atas */
+    { top: '4%',  left: '3%',   size: 42, op: 0.32, flip: false, rot: -3  },
+    { top: '2%',  left: '22%',  size: 30, op: 0.28, flip: true,  rot: 2   },
+    { top: '6%',  left: '55%',  size: 36, op: 0.30, flip: false, rot: -5  },
+    { top: '3%',  left: '78%',  size: 26, op: 0.26, flip: true,  rot: 3   },
+    { top: '8%',  left: '90%',  size: 40, op: 0.30, flip: false, rot: -2  },
+
+    /* Baris tengah atas */
+    { top: '22%', left: '1%',   size: 28, op: 0.28, flip: true,  rot: 4   },
+    { top: '18%', left: '38%',  size: 38, op: 0.32, flip: false, rot: -4  },
+    { top: '25%', left: '68%',  size: 24, op: 0.26, flip: true,  rot: 2   },
+    { top: '20%', left: '88%',  size: 34, op: 0.30, flip: false, rot: -3  },
+
+    /* Baris tengah */
+    { top: '42%', left: '5%',   size: 36, op: 0.30, flip: false, rot: -5  },
+    { top: '38%', left: '28%',  size: 22, op: 0.26, flip: true,  rot: 3   },
+    { top: '45%', left: '72%',  size: 40, op: 0.32, flip: false, rot: -2  },
+    { top: '40%', left: '92%',  size: 26, op: 0.27, flip: true,  rot: 4   },
+
+    /* Baris tengah bawah */
+    { top: '60%', left: '2%',   size: 32, op: 0.28, flip: true,  rot: 2   },
+    { top: '58%', left: '42%',  size: 34, op: 0.30, flip: false, rot: -4  },
+    { top: '63%', left: '65%',  size: 24, op: 0.26, flip: true,  rot: 3   },
+    { top: '57%', left: '84%',  size: 38, op: 0.30, flip: false, rot: -3  },
+
+    /* Baris bawah */
+    { top: '78%', left: '8%',   size: 40, op: 0.32, flip: false, rot: -5  },
+    { top: '75%', left: '30%',  size: 26, op: 0.27, flip: true,  rot: 2   },
+    { top: '80%', left: '58%',  size: 30, op: 0.28, flip: false, rot: -3  },
+    { top: '76%', left: '80%',  size: 22, op: 0.25, flip: true,  rot: 4   },
+    { top: '82%', left: '93%',  size: 36, op: 0.30, flip: false, rot: -2  },
+
+    /* Extra acak tengah */
+    { top: '33%', left: '15%',  size: 20, op: 0.24, flip: true,  rot: 5   },
+    { top: '50%', left: '50%',  size: 18, op: 0.22, flip: false, rot: -6  },
+    { top: '68%', left: '20%',  size: 24, op: 0.26, flip: true,  rot: 3   },
+    { top: '12%', left: '45%',  size: 20, op: 0.24, flip: false, rot: -4  },
+  ];
+
+  return (
+    <div style={{
+      position: 'absolute',
+      inset: 0,
+      overflow: 'hidden',
+      pointerEvents: 'none',
+      zIndex: 0,
+    }}>
+      {ships.map((s, i) => (
+        <PinisiIcon
+          key={i}
+          size={s.size}
+          opacity={s.op}
+          flip={s.flip}
+          rotate={s.rot}
+          style={{ top: s.top, left: s.left }}
+        />
+      ))}
+    </div>
+  );
+}

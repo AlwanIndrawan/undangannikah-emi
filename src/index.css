@@ -161,12 +161,6 @@ body::before {
   100% { transform: translateY(-80px) translateX(20px) scale(0.5); opacity: 0; }
 }
 
-@keyframes silkShimmer {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
 @keyframes borderGlow {
   0%, 100% { box-shadow: 0 0 12px var(--gold-dim), inset 0 0 12px rgba(201,146,42,0.04); }
   50%       { box-shadow: 0 0 28px rgba(201,146,42,0.25), inset 0 0 20px rgba(201,146,42,0.07); }
@@ -365,6 +359,139 @@ nav.topbar .nav-links a.active {
   background: transparent;
 }
 
+/* ── Cover: foto pengantin sebagai background ── */
+.cover-photo-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('/public/photos/cover.jpeg');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  z-index: -2;
+  /* Fallback jika foto belum ada */
+  background-color: #1E0505;
+  /* Zoom in slow untuk efek cinematic */
+  animation: coverZoomIn 20s ease-out both;
+}
+
+@keyframes coverZoomIn {
+  0%   { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+/* Overlay gelap berlapis supaya teks tetap terbaca */
+.cover-photo-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    /* Gradient atas gelap */
+    linear-gradient(to bottom,
+      rgba(10,2,2,0.72) 0%,
+      rgba(10,2,2,0.35) 35%,
+      rgba(10,2,2,0.20) 55%,
+      rgba(10,2,2,0.55) 75%,
+      rgba(10,2,2,0.85) 100%
+    ),
+    /* Vignet sisi kiri-kanan */
+    radial-gradient(ellipse 70% 100% at 50% 50%,
+      transparent 30%,
+      rgba(10,2,2,0.45) 100%
+    );
+}
+
+/* Sapuan kilau emas melintas diagonal */
+.cover-shimmer-sweep {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    transparent 38%,
+    rgba(232,184,75,0.09) 42%,
+    rgba(255,235,150,0.18) 50%,
+    rgba(232,184,75,0.09) 58%,
+    transparent 62%,
+    transparent 100%
+  );
+  background-size: 250% 250%;
+  animation: shimmerSweep 6s ease-in-out infinite;
+}
+
+.cover-shimmer-sweep--2 {
+  animation-delay: 3s;
+  opacity: 0.6;
+  background: linear-gradient(
+    75deg,
+    transparent 0%,
+    transparent 42%,
+    rgba(201,146,42,0.07) 48%,
+    rgba(245,223,160,0.12) 50%,
+    rgba(201,146,42,0.07) 52%,
+    transparent 58%,
+    transparent 100%
+  );
+}
+
+@keyframes shimmerSweep {
+  0%   { background-position: 200% 200%; opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { background-position: -200% -200%; opacity: 0; }
+}
+
+/* Sinar kilau di sudut kiri atas */
+.cover-glow-tl {
+  position: absolute;
+  top: 0; left: 0;
+  width: 55%; height: 55%;
+  background: radial-gradient(
+    ellipse at top left,
+    rgba(201,146,42,0.13) 0%,
+    transparent 65%
+  );
+  pointer-events: none;
+  z-index: 0;
+  animation: glowPulse 5s ease-in-out infinite;
+}
+
+/* Sinar kilau di sudut kanan bawah */
+.cover-glow-br {
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 55%; height: 55%;
+  background: radial-gradient(
+    ellipse at bottom right,
+    rgba(232,184,75,0.10) 0%,
+    transparent 65%
+  );
+  pointer-events: none;
+  z-index: 0;
+  animation: glowPulse 5s ease-in-out 2.5s infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1; }
+}
+
+/* Teks nama di atas foto: lebih tebal shadow agar kontras */
+.cover-monogram--photo {
+  text-shadow:
+    0 0 60px rgba(201,146,42,0.5),
+    0 0 20px rgba(0,0,0,0.8),
+    0 4px 16px rgba(0,0,0,0.6) !important;
+}
+
+.cover-couple--photo {
+  text-shadow:
+    0 2px 12px rgba(0,0,0,0.8),
+    0 0 24px rgba(201,146,42,0.2) !important;
+}
+
+/* Cover silk — dipakai di hero section setelah buka undangan */
 .cover-bg-silk {
   position: absolute;
   inset: 0;
@@ -381,7 +508,7 @@ nav.topbar .nav-links a.active {
   z-index: -1;
 }
 
-/* Pola tenun di atas silk */
+/* Pola tenun di atas foto */
 .cover-weave-pattern {
   position: absolute;
   inset: 0;

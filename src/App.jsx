@@ -22,6 +22,7 @@ import {
   FloatingParticles,
   PallullunganSmall,
   LontaraPattern,
+  PinisiBackground,
 } from './components/Decorations';
 
 /* ════════════════════════════════════════════════
@@ -99,8 +100,61 @@ const NAV_ITEMS = [
 ];
 
 /* ════════════════════════════════════════════════
-   MAIN APP
+   AUTO SCROLL — scroll perlahan ke bawah setelah buka undangan
+   Berhenti saat user sentuh / scroll sendiri
 ════════════════════════════════════════════════ */
+
+function useAutoScroll(isOpen) {
+  const rafRef    = useRef(null);
+  const activeRef = useRef(false);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const stop = () => {
+      activeRef.current = false;
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+
+    const onUserInteract = () => stop();
+    window.addEventListener('touchstart', onUserInteract, { passive: true });
+    window.addEventListener('wheel',      onUserInteract, { passive: true });
+    window.addEventListener('touchmove',  onUserInteract, { passive: true });
+    window.addEventListener('keydown',    onUserInteract);
+
+    /* Mulai scroll setelah animasi pembuka selesai */
+    const startTimer = setTimeout(() => {
+      activeRef.current = true;
+
+      const SPEED = 2; // px per frame — makin besar makin cepat
+
+      const tick = () => {
+        if (!activeRef.current) return;
+
+        /* Berhenti kalau sudah di dasar halaman */
+        const atBottom =
+          window.innerHeight + window.scrollY >= document.body.scrollHeight - 2;
+        if (atBottom) { stop(); return; }
+
+        window.scrollBy(0, SPEED);
+        rafRef.current = requestAnimationFrame(tick);
+      };
+
+      rafRef.current = requestAnimationFrame(tick);
+    }, 1000);
+
+    return () => {
+      clearTimeout(startTimer);
+      stop();
+      window.removeEventListener('touchstart', onUserInteract);
+      window.removeEventListener('wheel',      onUserInteract);
+      window.removeEventListener('touchmove',  onUserInteract);
+      window.removeEventListener('keydown',    onUserInteract);
+    };
+  }, [isOpen]);
+}
+
+
 
 function App() {
   const [activeSection, setActiveSection] = useState('cover');
@@ -112,6 +166,7 @@ function App() {
   const [playMusic,     setPlayMusic]     = useState(false);
 
   useScrollReveal(isOpen);
+  useAutoScroll(isOpen);
 
   /* Kunci scroll saat cover */
   useEffect(() => {
@@ -155,9 +210,7 @@ function App() {
   const handleOpenInvite = () => {
     setIsOpen(true);
     setPlayMusic(true);
-    setTimeout(() => {
-      document.getElementById('mempelai')?.scrollIntoView({ behavior: 'smooth' });
-    }, 600);
+    /* Auto scroll ditangani useAutoScroll hook */
   };
 
   /* ── COVER ── */
@@ -171,8 +224,13 @@ function App() {
           alignItems: 'center', justifyContent: 'center',
           textAlign: 'center', padding: '24px',
         }}>
-          {/* Silk background */}
-          <div className="cover-bg-silk" />
+          {/* Foto pengantin sebagai background */}
+          <div className="cover-photo-bg" />
+          <div className="cover-photo-overlay" />
+          <div className="cover-shimmer-sweep" />
+          <div className="cover-shimmer-sweep cover-shimmer-sweep--2" />
+          <div className="cover-glow-tl" />
+          <div className="cover-glow-br" />
           <div className="cover-weave-pattern" />
 
           {/* Lontara samar */}
@@ -299,6 +357,7 @@ function App() {
 
       {/* ══════════════ MEMPELAI ═════════════════════════════ */}
       <section id="mempelai">
+        <PinisiBackground />
         <SulapaEppa style={{ width:300, height:300, bottom:-40, right:-40, opacity:1 }} />
         <BugisCorner style={{ top:20, left:20, width:65, height:65 }} />
 
@@ -352,6 +411,7 @@ function App() {
 
       {/* ══════════════ INFO ACARA ════════════════════════════ */}
       <section id="info">
+        <PinisiBackground />
         <SulapaEppa style={{ width:280, height:280, top:-30, left:-30, opacity:1 }} />
         <BugisCorner style={{ top:20, right:20, width:65, height:65, transform:'scaleX(-1)' }} />
 
@@ -416,6 +476,7 @@ function App() {
 
       {/* ══════════════ KISAH CINTA ══════════════════════════ */}
       <section id="story">
+        <PinisiBackground />
         <BugisCorner style={{ bottom:20, right:20, width:65, height:65, transform:'rotate(180deg)' }} />
         <SulapaEppa style={{ width:250, height:250, top:-30, right:-30, opacity:1 }} />
 
@@ -447,6 +508,7 @@ function App() {
 
       {/* ══════════════ GALERI ════════════════════════════════ */}
       <section id="gallery">
+        <PinisiBackground />
         <SulapaEppa style={{ width:300, height:300, top:-40, right:-40, opacity:1 }} />
         <BugisCorner style={{ top:20, left:20, width:65, height:65 }} />
 
@@ -464,6 +526,7 @@ function App() {
 
       {/* ══════════════ RSVP ══════════════════════════════════ */}
       <section id="rsvp">
+        <PinisiBackground />
         <Reveal anim="down"><p className="subtitle">Konfirmasi Kehadiran</p></Reveal>
         <Reveal anim="up" delay="100ms"><h2>RSVP</h2></Reveal>
         <Reveal anim="fade" delay="200ms">
@@ -484,6 +547,7 @@ function App() {
 
       {/* ══════════════ AMPLOP DIGITAL ════════════════════════ */}
       <section id="amplop">
+        <PinisiBackground />
         <SulapaEppa style={{ width:350, height:350, bottom:-60, right:-60, opacity:1 }} />
 
         <Reveal anim="down"><p className="subtitle">Amplop Digital</p></Reveal>
@@ -535,6 +599,7 @@ function App() {
 
       {/* ══════════════ BUKU TAMU ════════════════════════════ */}
       <section id="pesan">
+        <PinisiBackground />
         <Reveal anim="down"><p className="subtitle">Buku Tamu Adat</p></Reveal>
         <Reveal anim="up" delay="100ms"><h2>Ucapan &amp; Doa</h2></Reveal>
         <Reveal anim="fade" delay="200ms">
@@ -556,6 +621,7 @@ function App() {
 
       {/* ══════════════ HORMAT KAMI ═══════════════════════════ */}
       <section id="hormat" style={{ background:'rgba(30,5,5,0.5)' }}>
+        <PinisiBackground />
         <BugisCorner style={{ top:20, left:20, width:65, height:65 }} />
         <BugisCorner style={{ bottom:20, right:20, width:65, height:65, transform:'rotate(180deg)' }} />
         <SulapaEppa style={{ width:280, height:280, top:'50%', left:'50%', transform:'translate(-50%,-50%)', opacity:1 }} />
