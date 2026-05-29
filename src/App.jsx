@@ -1,6 +1,6 @@
 import './index.css';
 import './gallery.css';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 
 import {
   WEDDING, MEMPELAI, BANKS, LOVE_STORY, PENGUNDANG,
@@ -86,6 +86,14 @@ function BugisCorner({ style }) {
 /* Style shortcuts */
 const TG = { color: 'var(--gold)' };
 const T2 = { color: 'var(--text-secondary)' };
+
+// Taruh setelah baris "const T2 = ..." (sekitar baris 88)
+function useGuestName() {
+  return useMemo(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('to') || WEDDING.namaUndangan;
+  }, []);
+}
 
 /* NAV ITEMS */
 const NAV_ITEMS = [
@@ -181,6 +189,7 @@ function useAutoScroll(isOpen) {
 
 
 function App() {
+  const guestName = useGuestName();
   const [activeSection, setActiveSection] = useState('cover');
   const [storyIndex,    setStoryIndex]    = useState(0);
   const [copiedBank,    setCopiedBank]    = useState('');
@@ -293,6 +302,11 @@ function App() {
 
             <p className="cover-date">08 · Juni · 2026</p>
             <p className="cover-location">Allagalung, Kab. Gowa</p>
+
+            <div className="cover-to-wrapper">
+              <p className="cover-to-label">Kepada Yth.</p>
+              <p className="cover-to-name">{guestName}</p>
+            </div>
 
             <button className="btn-open-invite" onClick={handleOpenInvite}>
               Buka Undangan
